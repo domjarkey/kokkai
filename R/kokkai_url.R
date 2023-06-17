@@ -1,0 +1,91 @@
+#' Create URL for kokkai.ndl.go.jp API call
+#'
+#' @param unit Unit of request, must be one of "speech", "meeting", or "meetingList". Default value is "speech".
+#' @param	startRecord The acquisition start position of the search results can be specified within the range of "1 to the number of searches". If omitted, the default value is "1"
+#' @param	maximum Records	The number of records that can be acquired with one request can be specified within the range of "1 to 100" for conference unit simple output and utterance unit output, and "1 to 10" for conference unit output. If omitted, the default value is "30" for simplified output for each meeting and output for each statement, and "3" for output for each meeting.
+#' @param	nameOfHouse The House of Representatives, House of Councillors, Both Houses, and Council of Both Houses can be specified as the name of the House. The results of the "Both Houses" and the "Both Houses Conference" are the same. Can be omitted (if omitted, it is not included in the search conditions). Also, if a value other than the specifiable value is specified, it will not be included in the search conditions.
+#' @param	nameOfMeeting It is possible to specify the meeting name (hiragana is acceptable) such as plenary session and committee. Partial match search. If multiple single-byte spaces (U+0020) are specified as delimiters, the specified words will be OR-searched. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	any It is possible to specify words included in the content of remarks. Partial match search. If multiple single-byte spaces (U+0020) are specified as delimiters, the specified words will be AND-searched. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	speaker It is possible to specify the name of the speaker (Hiragana is acceptable for the member's name). Partial match search. If multiple single-byte spaces (U+0020) are specified as delimiters, the specified words will be OR-searched. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	from You can specify the start date of the meeting to be searched in the format of "YYYY-MM-DD". Can be omitted (if omitted, it will be searched assuming that "0000-01-01" is specified).
+#' @param	until You can specify the ending date of the meeting to be searched in the format of "YYYY-MM-DD". Can be omitted (if omitted, it will be searched assuming that "9999-12-31" is specified).
+#' @param	supplementAndAppendix You can specify with "true" or "false" whether or not to limit the search target to addendums/appendices. Can be omitted (if omitted, it will be searched assuming that "false" (not limited) is specified).
+#' @param	contentsAndIndex You can specify with "true" or "false" whether or not to limit the search target to the table of contents and index. Can be omitted (if omitted, it will be searched assuming that "false" (not limited) is specified).
+#' @param	searchRange When searching by specifying a search term (parameter name: any), the search target location can be specified as either "beginning", "body", or "beginning/body". Can be omitted (if omitted, the search will assume that "beginning/body" is specified). If no search term is specified, it will not be included in the search conditions.
+#' @param	closing You can specify with "true" or "false" whether or not to limit the search target to minutes of closed meetings. Can be omitted (if omitted, it will be searched assuming that "false" (not limited) is specified).
+#' @param	speechNumber Speech number can be specified as an integer greater than or equal to 0 (eg "speechNumber=10" for speech number 10). Exact search. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	speakerPosition It is possible to specify the title of the speaker. Partial match search. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	speakerGroup It is possible to specify the party to which the speaker belongs. Partial match search (only official names are registered as data). Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	speakerRole It is possible to specify one of "witness", "reference person", and "public speaker" as the role of the speaker. Can be omitted (if omitted, it is not included in the search conditions). An error will occur if a value other than the specifiable value is specified.
+#' @param	speech ID	As an ID that uniquely identifies a statement, "Proceedings ID (parameter name: issueID. 21-digit alphanumeric characters)_speech number (attached to each statement displayed on the proceedings text display screen, 0 at the beginning) can be specified in the format of 3 digits by padding.If it is 4 digits, it will be a 4 digit number. Exact search. Can be omitted (if omitted, it is not included in the search conditions). An error occurs if the format is not appropriate.
+#' @param	issue ID	As an ID that uniquely identifies the proceedings (booklet), it is possible to specify the 21-digit alphanumeric characters displayed in the "Display proceedings text URL" link on the proceedings text display screen (example: "100105254X00119470520"). Exact search. Can be omitted (if omitted, it is not included in the search conditions). An error occurs if the format is not appropriate.
+#' @param	sessionFrom You can specify the beginning of the Diet session to be searched (starting session) with a natural number up to 3 digits. If specified in combination with Diet round To, range specified search, if specified by Diet round From alone, exact match search only for the corresponding round. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	sessionTo You can specify the end of the Diet session to be searched (end session) with a natural number up to 3 digits. If specified in combination with Diet Round From, range specified search, if specified with Diet Round To alone, exact match search only for the corresponding round. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	issueFrom You can specify the beginning of the number of issues to be searched (start issue) with an integer up to 3 digits (table of contents, index, appendix, addendum are treated as number 0). When specified in combination with the issue number To, a range specified search is performed, and when the issue number From is specified alone, an exact match search is performed only for the relevant issue. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	issueTo You can specify the end of the issue number (end issue) to be searched with an integer up to 3 digits (table of contents, index, appendix, addendum are treated as 0). When specified in combination with the issue number From, a range specified search is performed, and when specified with the issue number To alone, an exact match search is performed only for the relevant issue. Can be omitted (if omitted, it is not included in the search conditions).
+#' @param	record Packing	Either "xml" or "json" can be specified as the format of the response file for search requests. Can be omitted (if omitted, it will be searched assuming that "xml" is specified).
+#'
+#' @return URL of requested API call
+#' @export
+kokkai_url <- function(
+    unit = "speech",
+    startRecord = NULL,
+    maximumRecords = NULL,
+    nameOfHouse = NULL,
+    nameOfMeeting = NULL,
+    any = NULL,
+    speaker = NULL,
+    from = NULL,
+    until = NULL,
+    supplementAndAppendix = NULL,
+    contentsAndIndex = NULL,
+    searchRange = NULL,
+    closing = NULL,
+    speechNumber = NULL,
+    speakerPosition = NULL,
+    speakerGroup = NULL,
+    speakerRole = NULL,
+    speechID = NULL,
+    issueID = NULL,
+    sessionFrom = NULL,
+    sessionTo = NULL,
+    issueFrom = NULL,
+    issueTo = NULL,
+    recordPacking = "json"
+) {
+  stopifnot(unit %in% c("speech", "meeting", "meetingList"))
+  slug <- c("any", "closing", "contentsAndIndex", "from", "issueFrom",
+    "issueID", "issueTo", "maximumRecords", "nameOfHouse", "nameOfMeeting",
+    "recordPacking", "searchRange", "sessionFrom", "sessionTo", "speaker",
+    "speakerGroup", "speakerPosition", "speakerRole", "speechID",
+    "speechNumber", "startRecord", "supplementAndAppendix",
+    "until") |>
+    mget() |>
+    purrr::discard(is.null) |>
+    purrr::imap(~ paste0(.y, "=", .x)) |>
+    paste0(collapse = "&")
+  paste0(
+    "https://kokkai.ndl.go.jp/api/",
+    unit,"?", slug
+  )
+}
+
+#' Get Kokkai API request as R list
+#'
+#' @param unit Unit of request, must be one of "speech", "meeting", or "meetingList". Default value is "speech".
+#' @param ... Other parameters to pass to kokkai_url()
+#'
+#' @return R list representation of JSON
+#' @export
+#' @seealso [kokkai_url()] for full list of arguments
+kokkai_call <- function(unit = "speech", ...) {
+  url <- do.call(kokkai_url, args = c(unit, list(...)))
+  tryCatch({
+    con <- curl::curl(utils::URLencode(url))
+  },
+  error = function(e) e
+  )
+  res <- suppressWarnings( readLines(con) )
+  close(con)
+  jsonlite::fromJSON(res)
+}

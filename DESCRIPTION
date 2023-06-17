@@ -1,0 +1,19 @@
+Package: kokkai
+Type: Package
+Title: Access Japanese Diet Minutes
+Version: 0.1.0
+Authors@R: c(
+    person("Dominic", "Jarkey", role=c("aut","cre"), email="dominic.jarkey@gmail.com")
+  )
+Description: Functions to pull minutes and metadata from the Japanese Diet using
+  the public API (available online at kokkai.ndl.go.jp/)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+Imports: 
+    curl,
+    dplyr,
+    jsonlite,
+    purrr,
+    tibble
